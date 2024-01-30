@@ -21,7 +21,7 @@ void main()
             case  2:    addStudentRecordEnd(&headptr);                          break;
             case  3:    addStudentRecordMiddle(&headptr);                       break;
             case  4:    printStudentDatabase(headptr);                          break;
-            case  5:    printf("\nTotal records in database: %d\n", countAllRecordsInDatabase(headptr)); break;
+            case  5:    printf("\nTotal records in database: %d\n\n", countAllRecordsInDatabase(headptr)); break;
             case  6:    saveAllRecordToStorage(headptr);                        break;
             case  7:    readAllRecordFromStorage(&headptr);                     break;
             case  8:    printStudentRecordsUsingRecursion(headptr);             break;
@@ -116,31 +116,95 @@ void saveAllRecordToStorage(studentDatabase *ptr)
 
 int countAllRecordsInDatabase(studentDatabase *ptr)
 {
+    if(ptr == 0)    // checking if records are availabe or not
+        return 0;
 
-    return 0;
+    int count=0;
+    while(ptr)    // untill last record
+    {
+        count++;
+        ptr = ptr->next;     // next record
+    }
+    return count;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void printStudentDatabase(studentDatabase *ptr)
 {
+    printf("\n\n\n");
+    if(ptr == 0)    // checking if records are availabe or not
+    {
+        printf("No records found...\n");
+        printf("\n\n\n");
+        return;
+    }
 
+    while(ptr)    // untill last record
+    {
+        printf("%d %s %f\n", ptr->rollno, ptr->name, ptr->marks);     // print record
+        ptr = ptr->next;                                            // next record
+    }
+    printf("\n\n\n");
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void addStudentRecordMiddle(studentDatabase **ptr)
 {
+    studentDatabase *newRecord = malloc(sizeof(studentDatabase));     // creating dynamic memory
 
+    printf("Enter the student roll number, name and marks...\n");
+    scanf("%d%s%f", &newRecord->rollno, newRecord->name, &newRecord->marks); // scanning students data
+
+    // check if no records or new records roll no is less than 1st record -> update head-ptr
+    if((*ptr == 0) || (newRecord->rollno < (*ptr)->rollno))
+    {
+        newRecord->next = *ptr;
+        *ptr = newRecord;
+    }
+    else    // find the place according to roll no ascending order
+    {
+        studentDatabase *lastRecord = *ptr;
+
+        // To find the place to store a record
+        while((lastRecord->next) && (lastRecord->next->rollno < newRecord->rollno))
+            lastRecord = lastRecord->next;
+
+        newRecord->next = lastRecord->next; // update new records next address
+        lastRecord->next = newRecord;       // update last records next address (= new)
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void addStudentRecordEnd(studentDatabase **ptr)
 {
+    studentDatabase *newRecord = malloc(sizeof(studentDatabase));     // creating dynamic memory
 
+    printf("Enter the student roll number, name and marks...\n");
+    scanf("%d%s%f", &newRecord->rollno, newRecord->name, &newRecord->marks); // scanning students data
+
+    newRecord->next = 0;    // always at the end
+
+    if(*ptr == 0)   // if no records in database
+        *ptr = newRecord;
+    else
+    {
+        studentDatabase *lastRecord=*ptr;    // head-ptr
+
+        while(lastRecord->next)     // iterate to last available record
+            lastRecord = lastRecord->next;
+        lastRecord->next = newRecord;   // update the last record
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void addStudentRecordBegin(studentDatabase **ptr)
 {
+    studentDatabase *newRecord = malloc(sizeof(studentDatabase));     // creating dynamic memory
 
+    printf("Enter the student roll number, name and marks...\n");
+    scanf("%d%s%f", &newRecord->rollno, newRecord->name, &newRecord->marks); // scanning students data
+
+    newRecord->next = *ptr;
+    *ptr = newRecord;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////

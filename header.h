@@ -4,9 +4,9 @@
 struct StudentDatabase  // student database structure
 {
     int rollno;
-    float marks;
     char name[20];
-    struct StudentDatabase *next;
+    float marks;
+    struct StudentDatabase *next;   // To hold the address of next node
 };
 
 typedef struct StudentDatabase studentDatabase;
