@@ -104,13 +104,67 @@ void printStudentRecordsUsingRecursion(studentDatabase *ptr)
 
 void readAllRecordFromStorage(studentDatabase **ptr)
 {
+    FILE *fp = fopen("database.txt","r");
 
+    printf("\n\n\n");
+    if(fp == 0)
+    {
+        printf("\"database.txt\" file is not available!!!");
+        printf("\n\n\n");
+        return;
+    }
+
+    while(1)
+    {
+        studentDatabase *newRecord = malloc(sizeof(studentDatabase));
+
+        if(fscanf(fp,"%d%s%f", &newRecord->rollno, newRecord->name, &newRecord->marks) == EOF)
+        {
+            free(newRecord);
+            break;
+        }
+
+        newRecord->next = 0;
+
+        if(*ptr == 0)
+            *ptr = newRecord;
+        else
+        {
+            studentDatabase *lastRecord = *ptr;
+
+            while(lastRecord->next)
+                lastRecord = lastRecord->next;
+
+            lastRecord->next = newRecord;
+        }
+    }
+
+    fclose(fp);
+    printf("records are read from file successfully...");
+    printf("\n\n\n");
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void saveAllRecordToStorage(studentDatabase *ptr)
 {
-    
+    printf("\n\n\n");
+    if(ptr == 0)    // checking if records are availabe or not
+    {
+        printf("No records found...\n");
+        printf("\n\n\n");
+        return;
+    }
+
+    FILE *fp = fopen("database.txt","w");   // opening file in write mode
+
+    while(ptr)    // untill last record
+    {
+        fprintf(fp,"%d %s %f\n", ptr->rollno, ptr->name, ptr->marks);     // print record
+        ptr = ptr->next;                                            // next record
+    }
+    fclose(fp);
+    printf("Records saved to \"database.txt\" file successfully..."); 
+    printf("\n\n\n");
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
