@@ -92,13 +92,21 @@ void printStudentDatabaseInReverse(studentDatabase *ptr)
 
 void printStudentRecordsInReverseUsingRecursion(studentDatabase *ptr)
 {
-
+    if(ptr)
+    {
+        printStudentRecordsInReverseUsingRecursion(ptr->next);
+        printf("%d %s %f\n", ptr->rollno, ptr->name, ptr->marks);
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void printStudentRecordsUsingRecursion(studentDatabase *ptr)
 {
-
+    if(ptr)
+    {
+        printf("%d %s %f\n", ptr->rollno, ptr->name, ptr->marks);
+        printStudentRecordsUsingRecursion(ptr->next);
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
